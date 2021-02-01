@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UrlController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('main');
-})->name('main');
 
-Route::get('/urls', function () {
-    return view('urls');
-})->name('urls');
+Route::get('/', [PageController::class, 'main'])->name('main');
+
+Route::get('/urls', [UrlController::class, 'index'])->name('urls.index');
+Route::get('/urls/{id}', [UrlController::class, 'show'])->name('urls.show');
+Route::post('/urls', [UrlController::class, 'store'])->name('urls.store');

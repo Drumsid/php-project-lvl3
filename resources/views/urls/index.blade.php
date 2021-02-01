@@ -4,7 +4,7 @@
 @section('title', 'Сайты')
 
 @section('content')
-    <div class="container-lg">лишний!!!
+    <div class="container-lg">
         <h1 class="mt-5 mb-3">Сайты</h1>
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-nowrap">
@@ -16,7 +16,6 @@
                         <th>Код ответа</th>
                     </tr>
                     @foreach ($urls as $url)
-                    <h2>{{$url->name}}</h2>
                     <tr>
                         <td>{{$url->id}}</td>
                         <td>
