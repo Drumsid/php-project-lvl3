@@ -9,7 +9,6 @@ class PageController extends Controller
 {
     public function main()
     {
-        $url = new Url();
-        return view('main', compact('url'));
+        return view('main');
     }
 }
