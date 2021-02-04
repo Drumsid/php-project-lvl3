@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Url;
 
 class UrlController extends Controller
@@ -21,19 +22,17 @@ class UrlController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request);
-        // $validatedData = $request->validate([
-        //     'name' => ['required']
-        // ]);
-        // dd($validatedData);
         $formData = $request->input('url');
+        Validator::make($formData, [
+            'name' => 'required|unique:urls' // unique будет работать если проверять только домен
+        ])->validate();
         $urlData = parse_url($formData['name']);
         $host = $urlData['host'] ?? false;
         $duble = DB::table('urls')->where('name', $host)->first();
         if ($host && !$duble) {
             DB::table('urls')->insert([
-            'name' => $host,
-            'created_at' => Carbon::now()
+                'name' => $host,
+                'created_at' => Carbon::now()
             ]);
             flash('Website has been successfully added!')->success();
             return redirect()->route('urls.index');
