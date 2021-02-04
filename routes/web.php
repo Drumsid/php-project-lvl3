@@ -21,5 +21,5 @@ Route::get('/', [PageController::class, 'main'])->name('main');
 Route::get('/urls', [UrlController::class, 'index'])->name('urls.index');
 Route::get('/urls/{id}', [UrlController::class, 'show'])->name('urls.show');
 Route::post('/urls', [UrlController::class, 'store'])->name('urls.store');
-Route::post('/urls', [UrlController::class, 'store'])->name('urls.store');
+Route::post('/urls/{id}/checks', [UrlController::class, 'checks'])->name('urls.checks');
 Route::delete('/urls/{id}', [UrlController::class, 'destroy'])->name('urls.destroy');

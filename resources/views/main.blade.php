@@ -12,11 +12,9 @@
                     <p class="lead fs-5">Бесплатно проверяйте сайты на SEO пригодность</p>
                     @if ($errors->any())
                     <div>
-                        
-                            @foreach ($errors->all() as $error)
-                                <span class="text-danger">{{ $error }}</span>
-                            @endforeach
-                        
+                        @foreach ($errors->all() as $error)
+                            <span class="text-danger">{{ $error }}</span>
+                        @endforeach
                     </div>
                     @endif
                     {{Form::open(['url' => route('urls.store'), 'method' => 'post', 'class' => 'd-flex justify-content-center flex-column flex-md-row'])}}

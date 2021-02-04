@@ -12,13 +12,15 @@ class UrlController extends Controller
 {
     public function index()
     {
-        $urls = DB::table('urls')->get();
+        $urls = DB::table('urls')->orderBy('id', 'asc')->get();
         return view('urls.index', compact('urls'));
     }
     public function show($id)
     {
+        
         $url = DB::table('urls')->find($id);
-        return view('urls.show', compact('url'));
+        $cheks = DB::table('url_checks')->where('url_id', '=', $id)->get();
+        return view('urls.show', compact('url', 'cheks'));
     }
     public function store(Request $request)
     {
@@ -45,6 +47,19 @@ class UrlController extends Controller
         }
         flash($message)->error();
         return view('main');
+    }
+    public function checks(Request $request, $id)
+    {
+        $url = DB::table('urls')->find($id);
+        DB::table('url_checks')->insert([
+            'url_id' => $id,
+            'created_at' => $url->created_at,
+            'updated_at' => Carbon::now()
+        ]);
+        DB::table('urls')->where('id', $id)->update(
+            ['updated_at' => Carbon::now()]
+        );
+        return redirect()->route('urls.show', $id);
     }
     public function destroy($id)
     {

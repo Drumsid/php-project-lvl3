@@ -8,6 +8,7 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-nowrap">
                 <tbody>
+                    {{-- {{dd($urls)}} --}}
                     <tr>
                         <th>ID</th>
                         <th>Имя</th>
@@ -20,7 +21,7 @@
                         <td>
                             <a href="{{route('urls.show', $url->id)}}">{{$url->name}}</a>
                         </td>
-                        <td>{{$url->created_at}}</td>
+                        <td>{{$url->updated_at}}</td>
                         <td>200 
                             {{Form::open(['url' => route('urls.destroy', $url->id), 'method' => 'delete'])}}
                                 {{Form::submit('Del')}}
