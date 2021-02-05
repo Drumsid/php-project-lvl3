@@ -60,7 +60,7 @@ class UrlController extends Controller
         );
         return redirect()->route('urls.show', $id);
     }
-    public function destroy($id)
+    public function destroy($id) // only for dev
     {
         if ($id) {
             DB::table('urls')->where('id', '=', $id)->delete();

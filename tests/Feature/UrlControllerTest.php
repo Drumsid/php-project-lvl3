@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-// use App\Models\Url;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +21,11 @@ class UrlControllerTest extends TestCase
     public function testIndex()
     {
         $response = $this->get(route('urls.index'));
+        $response->assertOk();
+    }
+    public function testShow()
+    {
+        $response = $this->get(route('urls.show', 1));
         $response->assertOk();
     }
 }
