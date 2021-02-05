@@ -17,7 +17,6 @@ class UrlController extends Controller
     }
     public function show($id)
     {
-        
         $url = DB::table('urls')->find($id);
         $cheks = DB::table('url_checks')->where('url_id', '=', $id)->get();
         return view('urls.show', compact('url', 'cheks'));

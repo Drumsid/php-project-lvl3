@@ -28,8 +28,8 @@ jobs:
         # Install project
         run: make setup
 
-      # - name: Check lint
-      #   run: make lint
+      - name: Check lint
+        run: make lint
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         run: make test
