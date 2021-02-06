@@ -48,7 +48,7 @@
                     @foreach ($cheks as $chek)
                     <tr>
                         <td>{{$chek->id}}</td>
-                        <td>200</td>
+                        <td>{{$chek->status}}</td>
                         <td></td>
                         <td></td>
                         <td>A new tool that blends your</td>

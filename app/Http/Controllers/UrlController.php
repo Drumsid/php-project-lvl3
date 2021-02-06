@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Url;
+use Illuminate\Support\Facades\Http;
 
 class UrlController extends Controller
 {
@@ -49,17 +49,24 @@ class UrlController extends Controller
     }
     public function checks(Request $request, $id)
     {
+        
         $url = DB::table('urls')->find($id);
-        DB::table('url_checks')->insert([
-            'url_id' => $id,
-            'created_at' => $url->created_at,
-            'updated_at' => Carbon::now()
-        ]);
-        DB::table('urls')->where('id', $id)->update(
-            ['updated_at' => Carbon::now()]
-        );
-        flash('Сайт проаналезирован!')->warning();
-        return redirect()->route('urls.show', $id);
+        $check = Http::get($url->name);
+        if ($check->ok()) {
+            DB::table('url_checks')->insert([
+                'url_id' => $id,
+                'status' => $check->status(),
+                'created_at' => $url->created_at,
+                'updated_at' => Carbon::now()
+            ]);
+            DB::table('urls')->where('id', $id)->update(
+                ['updated_at' => Carbon::now(), 'status' => $check->status()]
+            );
+            flash('Сайт проанализирован!')->warning();
+            return redirect()->route('urls.show', $id);
+        }
+        flash('проверка не удалась!')->error();
+        return back();
     }
     public function destroy($id) // only for dev
     {

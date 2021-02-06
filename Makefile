@@ -3,10 +3,6 @@ start:
 
 setup:
 	composer install
-	php artisan cache:clear
-	php artisan config:clear
-	php artisan route:clear
-	php artisan view:clear
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
 	touch database/database.sqlite
