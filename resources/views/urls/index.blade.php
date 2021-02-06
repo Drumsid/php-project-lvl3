@@ -22,7 +22,7 @@
                             <a href="{{route('urls.show', $url->id)}}">{{$url->name}}</a>
                         </td>
                         <td>{{$url->updated_at}}</td>
-                        <td>{{$url->status}}
+                        <td>
                             {{Form::open(['url' => route('urls.destroy', $url->id), 'method' => 'delete'])}}
                                 {{Form::submit('Del')}}
                             {{Form::close()}}

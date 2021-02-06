@@ -7,12 +7,18 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use DiDom\Document;
 
 class UrlController extends Controller
 {
     public function index()
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
+        // $urls = DB::table('urls')->join('url_checks', 'urls.id', '=', 'url_checks.url_id')->get();
+        // $urls = DB::table('urls')->crossJoin('url_checks')->get();
+        // dd($urls);
+        // $checks = DB::table('url_checks')->orderBy('id', 'asc')->get();
+
         return view('urls.index', compact('urls'));
     }
     public function show($id)
@@ -49,9 +55,10 @@ class UrlController extends Controller
     }
     public function checks(Request $request, $id)
     {
-        
         $url = DB::table('urls')->find($id);
         $check = Http::get($url->name);
+        // $document = new Document($url->name);
+        // dd($document->find('meta'));
         if ($check->ok()) {
             DB::table('url_checks')->insert([
                 'url_id' => $id,
@@ -60,7 +67,7 @@ class UrlController extends Controller
                 'updated_at' => Carbon::now()
             ]);
             DB::table('urls')->where('id', $id)->update(
-                ['updated_at' => Carbon::now(), 'status' => $check->status()]
+                ['updated_at' => Carbon::now()]
             );
             flash('Сайт проанализирован!')->warning();
             return redirect()->route('urls.show', $id);
