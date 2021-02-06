@@ -22,4 +22,7 @@ Route::get('/urls', [UrlController::class, 'index'])->name('urls.index');
 Route::get('/urls/{id}', [UrlController::class, 'show'])->name('urls.show');
 Route::post('/urls', [UrlController::class, 'store'])->name('urls.store');
 Route::post('/urls/{id}/checks', [UrlController::class, 'checks'])->name('urls.checks');
+
+// only dev
 Route::delete('/urls/{id}', [UrlController::class, 'destroy'])->name('urls.destroy');
+Route::delete('/urls/{id}/delete', [UrlController::class, 'checkDestroy'])->name('cheks.destroy');

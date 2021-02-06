@@ -35,14 +35,14 @@ class UrlController extends Controller
                 'name' => $host,
                 'created_at' => Carbon::now()
             ]);
-            flash('Website has been successfully added!')->success();
+            flash('Сайт успешно добавлен!')->success();
             return redirect()->route('urls.index');
         }
         if (! $host) {
-            $message = "Its not website addres!";
+            $message = "Введите корректный адрес сайта!";
         }
         if ($duble) {
-            $message = "This website \"{$duble->name}\" alredy exists!";
+            $message = "Такой сайт \"{$duble->name}\" уже существует!";
         }
         flash($message)->error();
         return view('main');
@@ -58,14 +58,23 @@ class UrlController extends Controller
         DB::table('urls')->where('id', $id)->update(
             ['updated_at' => Carbon::now()]
         );
+        flash('Сайт проаналезирован!')->warning();
         return redirect()->route('urls.show', $id);
     }
     public function destroy($id) // only for dev
     {
         if ($id) {
             DB::table('urls')->where('id', '=', $id)->delete();
-            flash('Website has been successfully deleted!')->success();
+            flash('сайт успешно удален!')->success();
         }
         return redirect()->route('urls.index');
+    }
+    public function checkDestroy($id) // only for dev
+    {
+        if ($id) {
+            DB::table('url_checks')->where('id', '=', $id)->delete();
+            flash('Данные о проверке удалены!')->success();
+        }
+        return back();
     }
 }
