@@ -14,8 +14,9 @@ class UrlController extends Controller
     public function index()
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
-        // $urls = DB::table('urls')->join('url_checks', 'urls.id', '=', 'url_checks.url_id')->get();
-        // $urls = DB::table('urls')->crossJoin('url_checks')->get();
+        // $urls = DB::select("SELECT * FROM urls JOIN url_checks ON urls.id = url_checks.url_id");
+        // $urls = DB::table('urls')->leftJoin('url_checks', 'urls.id', '=', 'url_checks.url_id')->get();
+        // HAVING max(url_checks.updated_at)
         // dd($urls);
         // $checks = DB::table('url_checks')->orderBy('id', 'asc')->get();
 
