@@ -8,7 +8,6 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-nowrap">
                 <tbody>
-                    {{-- {{dd($urls)}} --}}
                     <tr>
                         <th>ID</th>
                         <th>Имя</th>
@@ -23,6 +22,7 @@
                         </td>
                         <td>{{$url->updated_at}}</td>
                         <td>
+                            {{$lastCheck[$url->id]->status_code ?? 'Проверок еще не было'}}
                             {{Form::open(['url' => route('urls.destroy', $url->id), 'method' => 'delete'])}}
                                 {{Form::submit('Del')}}
                             {{Form::close()}}

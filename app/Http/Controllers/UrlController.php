@@ -8,19 +8,16 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use DiDom\Document;
+use DiDom\Query;
 
 class UrlController extends Controller
 {
     public function index()
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
-        // $urls = DB::select("SELECT * FROM urls JOIN url_checks ON urls.id = url_checks.url_id");
-        // $urls = DB::table('urls')->leftJoin('url_checks', 'urls.id', '=', 'url_checks.url_id')->get();
-        // HAVING max(url_checks.updated_at)
-        // dd($urls);
-        // $checks = DB::table('url_checks')->orderBy('id', 'asc')->get();
-
-        return view('urls.index', compact('urls'));
+        $checks = DB::table('url_checks')->orderBy('url_id', 'asc')->orderBy('created_at', 'desc')->distinct('url_id')->get();
+        $lastCheck = $checks->keyBy('url_id');
+        return view('urls.index', compact('urls', 'lastCheck'));
     }
     public function show($id)
     {
@@ -39,7 +36,7 @@ class UrlController extends Controller
         $duble = DB::table('urls')->where('name', $host)->first();
         if ($host && !$duble) {
             DB::table('urls')->insert([
-                'name' => $host,
+                'name' => $urlData['scheme'] . "://" . $host,
                 'created_at' => Carbon::now()
             ]);
             flash('Сайт успешно добавлен!')->success();
@@ -58,12 +55,14 @@ class UrlController extends Controller
     {
         $url = DB::table('urls')->find($id);
         $check = Http::get($url->name);
-        // $document = new Document($url->name);
-        // dd($document->find('meta'));
+        
+        // $document = new Document($url->name, true);
+        // dd($document);
+        // dd($document->first('h1'));
         if ($check->ok()) {
             DB::table('url_checks')->insert([
                 'url_id' => $id,
-                'status' => $check->status(),
+                'status_code' => $check->status(),
                 'created_at' => $url->created_at,
                 'updated_at' => Carbon::now()
             ]);
