@@ -55,14 +55,19 @@ class UrlController extends Controller
     {
         $url = DB::table('urls')->find($id);
         $check = Http::get($url->name);
-        
-        // $document = new Document($url->name, true);
-        // dd($document);
-        // dd($document->first('h1'));
+
+        $document = new Document($url->name, true);
+        $h1 = optional($document->first('h1'))->text();
+        $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
+        $description = optional($document->first('meta[name=description]'))->getAttribute('content');
+
         if ($check->ok()) {
             DB::table('url_checks')->insert([
                 'url_id' => $id,
                 'status_code' => $check->status(),
+                'h1' => $h1,
+                'keywords' => $keywords,
+                'description' => $description,
                 'created_at' => $url->created_at,
                 'updated_at' => Carbon::now()
             ]);

@@ -49,9 +49,9 @@
                     <tr>
                         <td>{{$chek->id}}</td>
                         <td>{{$chek->status_code}}</td>
-                        <td></td>
-                        <td></td>
-                        <td>A new tool that blends your</td>
+                        <td>{{Str::limit($chek->h1, 15)}}</td>
+                        <td>{{Str::limit($chek->keywords, 15)}}</td>
+                        <td>{{Str::limit($chek->description, 15)}}</td>
                         <td>{{$chek->updated_at}}</td>
                         <td>
                             {{Form::open(['url' => route('cheks.destroy', $chek->id), 'method' => 'delete'])}}
