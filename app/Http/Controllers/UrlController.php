@@ -28,15 +28,16 @@ class UrlController extends Controller
     public function store(Request $request)
     {
         $formData = $request->input('url');
+        // dd($formData);
         Validator::make($formData, [
             'name' => 'required|unique:urls' // unique будет работать если проверять только домен
         ])->validate();
         $urlData = parse_url($formData['name']);
-        $host = $urlData['host'] ?? false;
+        $host = array_key_exists('host', $urlData) ? "{$urlData['scheme']}://{$urlData['host']}" : null;
         $duble = DB::table('urls')->where('name', $host)->first();
         if ($host && !$duble) {
             DB::table('urls')->insert([
-                'name' => $urlData['scheme'] . "://" . $host,
+                'name' => $host,
                 'created_at' => Carbon::now()
             ]);
             flash('Сайт успешно добавлен!')->success();

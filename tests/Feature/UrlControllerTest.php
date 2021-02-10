@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class UrlControllerTest extends TestCase
 {
@@ -28,4 +29,14 @@ class UrlControllerTest extends TestCase
         $response = $this->get(route('urls.show', 1));
         $response->assertOk();
     }
+    // public function testCreate()
+    // {
+    //     $data = [
+    //         'name' => 'https://test.ru',
+    //     ];
+    //     $response = $this->post(route('urls.store'), $data);
+    //     $response->assertSessionHasNoErrors();
+    //     // $this->assertDatabaseHas('urls', $data);
+    //     $response->assertRedirect();
+    // }
 }
