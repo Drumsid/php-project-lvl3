@@ -28,29 +28,33 @@ class UrlController extends Controller
     public function store(Request $request)
     {
         $formData = $request->input('url');
-        // dd($formData);
-        Validator::make($formData, [
+        $validator = Validator::make($formData, [
             'name' => 'required|unique:urls' // unique будет работать если проверять только домен
-        ])->validate();
+        ]);
+        if ($validator->fails()) {
+            flash('пустой запрос')->error();
+            return redirect()->route('main');
+        }
+
         $urlData = parse_url($formData['name']);
         $host = array_key_exists('host', $urlData) ? "{$urlData['scheme']}://{$urlData['host']}" : null;
+        if (! $host) {
+            flash('Введите корректный адрес сайта!')->error();
+            return redirect()->route('main');
+        }
+
         $duble = DB::table('urls')->where('name', $host)->first();
-        if ($host && !$duble) {
-            DB::table('urls')->insert([
+        if ($duble) {
+            flash("Такой сайт \"{$duble->name}\" уже существует!")->warning();
+            return redirect()->route('urls.show', $duble->id);
+        } else {
+            $id = DB::table('urls')->insertGetId([
                 'name' => $host,
                 'created_at' => Carbon::now()
             ]);
             flash('Сайт успешно добавлен!')->success();
-            return redirect()->route('urls.index');
+            return redirect()->route('urls.show', $id);
         }
-        if (! $host) {
-            $message = "Введите корректный адрес сайта!";
-        }
-        if ($duble) {
-            $message = "Такой сайт \"{$duble->name}\" уже существует!";
-        }
-        flash($message)->error();
-        return view('main');
     }
     public function checks(Request $request, $id)
     {
