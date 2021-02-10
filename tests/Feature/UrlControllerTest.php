@@ -29,14 +29,14 @@ class UrlControllerTest extends TestCase
         $response = $this->get(route('urls.show', 1));
         $response->assertOk();
     }
-    // public function testCreate()
-    // {
-    //     $data = [
-    //         'name' => 'https://test.ru',
-    //     ];
-    //     $response = $this->post(route('urls.store'), $data);
-    //     $response->assertSessionHasNoErrors();
-    //     // $this->assertDatabaseHas('urls', $data);
-    //     $response->assertRedirect();
-    // }
+    public function testStore()
+    {
+        $data = [
+            'name' => 'https://test.ru'
+        ];
+        $response = $this->post(route('urls.store'), $data);
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+        $this->assertDatabaseHas('urls', $data);
+    }
 }
