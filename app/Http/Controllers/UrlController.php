@@ -29,7 +29,7 @@ class UrlController extends Controller
     {
         $formData = $request->input('url');
         $validator = Validator::make($formData, [
-            'name' => 'required|unique:urls' // unique будет работать если проверять только домен
+            'name' => 'required|unique:urls|regex:/^(https?):\/\/[^ -"\s].+$/m' // unique будет работать если проверять только домен
         ]);
         if ($validator->fails()) {
             flash('пустой запрос')->error();
