@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use DiDom\Document;
 
 class UrlControllerTest extends TestCase
 {
@@ -59,19 +60,28 @@ class UrlControllerTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('urls', $data);
 
-        Http::fake();
-        $fakeResponse = Http::get($data['name']);
-        $this->assertTrue($fakeResponse->ok());
+        // Http::fake();
+        // $fakeResponse = Http::get($data['name']);
+        // $this->assertTrue($fakeResponse->ok());
 
-        DB::table('url_checks')->insert([
-            'url_id' => $data['id'],
-            'status_code' => 200,
-            'h1' => 'header_test',
-            'keywords' => 'keywords',
-            'description' => 'description',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        $this->assertDatabaseHas('url_checks', ['h1' => 'header_test']);
+        // DB::table('url_checks')->insert([
+        //     'url_id' => $data['id'],
+        //     'status_code' => 200,
+        //     'h1' => 'header_test',
+        //     'keywords' => 'keywords',
+        //     'description' => 'description',
+        //     'created_at' => Carbon::now(),
+        //     'updated_at' => Carbon::now()
+        // ]);
+        // $this->assertDatabaseHas('url_checks', ['h1' => 'header_test']);
+        $url = 'test.ru';
+        $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
+        // dd($html);
+        $fake = Http::fake([$url => Http::response($html, 200)]);
+        // dd($fake);
+        $document = new Document($html);
+        $h1 = optional($document->first('h1'))->text();
+        $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
+        $description = optional($document->first('meta[name=description]'))->getAttribute('content');
     }
 }
