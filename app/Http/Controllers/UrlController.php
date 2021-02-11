@@ -59,8 +59,12 @@ class UrlController extends Controller
     public function checks(Request $request, $id)
     {
         $url = DB::table('urls')->find($id);
-        $check = Http::get($url->name);
-
+        try {
+            $check = Http::get($url->name);
+        } catch (\Exception $e) {
+            flash("Error: {$e->getMessage()}")->error();
+            return back();
+        }
         $document = new Document($url->name, true);
         $h1 = optional($document->first('h1'))->text();
         $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
