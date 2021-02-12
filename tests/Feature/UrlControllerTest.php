@@ -58,10 +58,10 @@ class UrlControllerTest extends TestCase
         $data = ['id' => 1, 'name' => 'https://test.ru'];
         $url = $data['name'];
         $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
-        Http::fake([$url => Http::response($html)]);
+        $fake = Http::fake([$url => Http::response($html)]);
         $response = $this->post(route('urls.checks', $data['id']));
         $test = DB::table('url_checks')->get();
-        // dd($test);
-        
+        dd($fake);
+        // , 200, ['Content-Type: text/html;charset=UTF-8']
     }
 }

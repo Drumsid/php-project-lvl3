@@ -70,7 +70,7 @@ class UrlController extends Controller
         }
         // dd($url->name);
         $document = new Document($url->name, true);
-        dd($document);
+        // dd($document);
         $h1 = optional($document->first('h1'))->text();
         $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
         $description = optional($document->first('meta[name=description]'))->getAttribute('content');
