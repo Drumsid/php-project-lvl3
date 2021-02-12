@@ -59,18 +59,24 @@ class UrlController extends Controller
     public function checks(Request $request, $id)
     {
         $url = DB::table('urls')->find($id);
+        // dd($url);
         try {
             $check = Http::get($url->name);
+            // dd($check);
         } catch (\Exception $e) {
             flash("Error: {$e->getMessage()}")->error();
+            // dd('error');
             return back();
         }
+        // dd($url->name);
         $document = new Document($url->name, true);
+        dd($document);
         $h1 = optional($document->first('h1'))->text();
         $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
         $description = optional($document->first('meta[name=description]'))->getAttribute('content');
-
+        // dd($check);
         if ($check->ok()) {
+            // dd('db');
             DB::table('url_checks')->insert([
                 'url_id' => $id,
                 'status_code' => $check->status(),

@@ -16,18 +16,18 @@ class UrlControllerTest extends TestCase
     {
         parent::setUp();
         DB::table('urls')->insert([
-            ['name' => "https://yandex.ru", 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => "https://test.ru", 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'exampleSite2.ru', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
-        // DB::table('url_checks')->insert([
-        //     'url_id' => 1,
-        //     'status_code' => 200,
-        //     'h1' => 'header',
-        //     'keywords' => 'keywords',
-        //     'description' => 'description',
-        //     'created_at' => Carbon::now(),
-        //     'updated_at' => Carbon::now()
-        // ]);
+        DB::table('url_checks')->insert([
+            'url_id' => 1,
+            'status_code' => 200,
+            'h1' => 'header',
+            'keywords' => 'keywords',
+            'description' => 'description',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
     }
     public function testIndex()
     {
@@ -55,33 +55,13 @@ class UrlControllerTest extends TestCase
     }
     public function testChecks()
     {
-        $data = ['id' => 1, 'name' => 'https://yandex.ru'];
-        $response = $this->post(route('urls.checks', $data['id']));
-        $response->assertRedirect();
-        $this->assertDatabaseHas('urls', $data);
-
-        // Http::fake();
-        // $fakeResponse = Http::get($data['name']);
-        // $this->assertTrue($fakeResponse->ok());
-
-        // DB::table('url_checks')->insert([
-        //     'url_id' => $data['id'],
-        //     'status_code' => 200,
-        //     'h1' => 'header_test',
-        //     'keywords' => 'keywords',
-        //     'description' => 'description',
-        //     'created_at' => Carbon::now(),
-        //     'updated_at' => Carbon::now()
-        // ]);
-        // $this->assertDatabaseHas('url_checks', ['h1' => 'header_test']);
-        $url = 'test.ru';
+        $data = ['id' => 1, 'name' => 'https://test.ru'];
+        $url = $data['name'];
         $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
-        // dd($html);
-        $fake = Http::fake([$url => Http::response($html, 200)]);
-        // dd($fake);
-        $document = new Document($html);
-        $h1 = optional($document->first('h1'))->text();
-        $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
-        $description = optional($document->first('meta[name=description]'))->getAttribute('content');
+        Http::fake([$url => Http::response($html)]);
+        $response = $this->post(route('urls.checks', $data['id']));
+        $test = DB::table('url_checks')->get();
+        // dd($test);
+        
     }
 }
