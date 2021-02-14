@@ -15,14 +15,14 @@ class UrlController extends Controller
     public function index()
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
-        $checks = DB::table('url_checks')->orderBy('url_id', 'asc')->orderBy('created_at', 'desc')->distinct('url_id')->get();
+        $checks = DB::table('urls_checks')->orderBy('url_id', 'asc')->orderBy('created_at', 'desc')->distinct('url_id')->get();
         $lastCheck = $checks->keyBy('url_id');
         return view('urls.index', compact('urls', 'lastCheck'));
     }
     public function show($id)
     {
         $url = DB::table('urls')->find($id);
-        $cheks = DB::table('url_checks')->where('url_id', '=', $id)->get();
+        $cheks = DB::table('urls_checks')->where('url_id', '=', $id)->get();
         return view('urls.show', compact('url', 'cheks'));
     }
     public function store(Request $request)
@@ -70,7 +70,7 @@ class UrlController extends Controller
         $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
         $description = optional($document->first('meta[name=description]'))->getAttribute('content');
         if ($response->ok()) {
-            DB::table('url_checks')->insert([
+            DB::table('urls_checks')->insert([
                 'url_id' => $id,
                 'status_code' => $response->status(),
                 'h1' => $h1,
@@ -99,7 +99,7 @@ class UrlController extends Controller
     public function checkDestroy($id) // only for dev
     {
         if ($id) {
-            DB::table('url_checks')->where('id', '=', $id)->delete();
+            DB::table('urls_checks')->where('id', '=', $id)->delete();
             flash('Данные о проверке удалены!')->success();
         }
         return back();

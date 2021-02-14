@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUrlChecksTable extends Migration
+class CreateUrlsChecksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUrlChecksTable extends Migration
      */
     public function up()
     {
-        Schema::create('url_checks', function (Blueprint $table) {
+        Schema::create('urls_checks', function (Blueprint $table) {
             $table->id();
             $table->integer('url_id');
             $table->integer('status_code')->default(200);
@@ -31,6 +31,6 @@ class CreateUrlChecksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('url_checks');
+        Schema::dropIfExists('urls_checks');
     }
 }
