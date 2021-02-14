@@ -36,7 +36,7 @@ class UrlController extends Controller
         }
 
         $urlData = parse_url($formData['name']);
-        if (is_array($urlData) && array_key_exists('host', $urlData)) {
+        if (is_array($urlData) && array_key_exists('scheme', $urlData) && array_key_exists('host', $urlData)) {
             $host = "{$urlData['scheme']}://{$urlData['host']}";
         } else {
             flash('Не корректный адрес сайта!')->error();
