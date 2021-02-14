@@ -34,12 +34,12 @@ class UrlControllerTest extends TestCase
         $response = $this->get(route('urls.index'));
         $response->assertOk();
     }
-    public function testShow()
+    public function testShow(): void
     {
         $response = $this->get(route('urls.show', 1));
         $response->assertOk();
     }
-    public function testStore()
+    public function testStore(): void
     {
         $data = ['name' => "https://test.ru"];
         $response = $this->post(route('urls.store'), ['url' => $data]);

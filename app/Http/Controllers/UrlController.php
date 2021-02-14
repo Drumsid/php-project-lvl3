@@ -11,20 +11,20 @@ use DiDom\Document;
 
 class UrlController extends Controller
 {
-    public function index(): string
+    public function index(): object
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
         $checks = DB::table('url_checks')->orderBy('url_id', 'asc')->orderBy('created_at', 'desc')->distinct('url_id')->get();
         $lastCheck = $checks->keyBy('url_id');
         return view('urls.index', compact('urls', 'lastCheck'));
     }
-    public function show($id)
+    public function show(int $id): object
     {
         $url = DB::table('urls')->find($id);
         $cheks = DB::table('url_checks')->where('url_id', '=', $id)->orderBy('updated_at', 'desc')->get();
         return view('urls.show', compact('url', 'cheks'));
     }
-    public function store(Request $request)
+    public function store(Request $request): object
     {
         $formData = $request->input('url');
         $validator = Validator::make($formData, [
@@ -55,7 +55,7 @@ class UrlController extends Controller
             return redirect()->route('urls.show', $id);
         }
     }
-    public function checks(Request $request, $id)
+    public function checks(int $id): object
     {
         $url = DB::table('urls')->find($id);
         try {
