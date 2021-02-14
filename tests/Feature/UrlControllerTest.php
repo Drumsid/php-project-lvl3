@@ -57,11 +57,18 @@ class UrlControllerTest extends TestCase
     {
         $data = ['id' => 1, 'name' => 'https://test.ru'];
         $url = $data['name'];
+        $expected = [
+            'url_id'   => 1,
+            'status_code' => 200,
+            'keywords'    => 'keywords test fixture',
+            'h1'          => 'Header test fixtures',
+            'description' => 'description test fixture',
+        ];
         $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
-        $fake = Http::fake([$url => Http::response($html)]);
+        Http::fake([$url => Http::response($html)]);
         $response = $this->post(route('urls.checks', $data['id']));
-        $test = DB::table('url_checks')->get();
-        dd($fake);
-        // , 200, ['Content-Type: text/html;charset=UTF-8']
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+        $this->assertDatabaseHas('url_checks', $expected);
     }
 }
