@@ -19,7 +19,7 @@ class UrlControllerTest extends TestCase
             ['name' => "https://test.ru", 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'exampleSite2.ru', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
-        DB::table('url_checks')->insert([
+        DB::table('urls_checks')->insert([
             'url_id' => 1,
             'status_code' => 200,
             'h1' => 'header',
@@ -69,6 +69,6 @@ class UrlControllerTest extends TestCase
         $response = $this->post(route('urls.checks', $data['id']));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseHas('url_checks', $expected);
+        $this->assertDatabaseHas('urls_checks', $expected);
     }
 }

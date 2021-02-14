@@ -43,7 +43,6 @@
                         <th>keywords</th>
                         <th>description</th>
                         <th>Дата создания</th>
-                        <th>delete</th>
                     </tr>
                     @foreach ($cheks as $chek)
                     <tr>
@@ -53,11 +52,6 @@
                         <td>{{Str::limit($chek->keywords, 30)}}</td>
                         <td>{{Str::limit($chek->description, 30)}}</td>
                         <td>{{$chek->updated_at}}</td>
-                        <td>
-                            {{Form::open(['url' => route('cheks.destroy', $chek->id), 'method' => 'delete'])}}
-                                {{Form::submit('Del')}}
-                            {{Form::close()}}
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>

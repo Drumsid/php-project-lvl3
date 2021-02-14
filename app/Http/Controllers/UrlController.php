@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use DiDom\Document;
-use DiDom\Query;
 
 class UrlController extends Controller
 {
@@ -22,14 +21,14 @@ class UrlController extends Controller
     public function show($id)
     {
         $url = DB::table('urls')->find($id);
-        $cheks = DB::table('urls_checks')->where('url_id', '=', $id)->get();
+        $cheks = DB::table('urls_checks')->where('url_id', '=', $id)->orderBy('updated_at', 'desc')->get();
         return view('urls.show', compact('url', 'cheks'));
     }
     public function store(Request $request)
     {
         $formData = $request->input('url');
         $validator = Validator::make($formData, [
-            'name' => 'required|unique:urls|regex:/^(https?):\/\/[^ -"\s].+$/m' // unique будет работать если проверять только домен
+            'name' => 'required|unique:urls|regex:/^(https?):\/\/[^ -"\s].+$/m'
         ]);
         if ($validator->fails()) {
             flash('пустой запрос')->error();
@@ -86,22 +85,6 @@ class UrlController extends Controller
             return redirect()->route('urls.show', $id);
         }
         flash('проверка не удалась!')->error();
-        return back();
-    }
-    public function destroy($id) // only for dev
-    {
-        if ($id) {
-            DB::table('urls')->where('id', '=', $id)->delete();
-            flash('сайт успешно удален!')->success();
-        }
-        return redirect()->route('urls.index');
-    }
-    public function checkDestroy($id) // only for dev
-    {
-        if ($id) {
-            DB::table('urls_checks')->where('id', '=', $id)->delete();
-            flash('Данные о проверке удалены!')->success();
-        }
         return back();
     }
 }
