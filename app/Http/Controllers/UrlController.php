@@ -11,7 +11,7 @@ use DiDom\Document;
 
 class UrlController extends Controller
 {
-    public function index()
+    public function index(): string
     {
         $urls = DB::table('urls')->orderBy('id', 'asc')->get();
         $checks = DB::table('url_checks')->orderBy('url_id', 'asc')->orderBy('created_at', 'desc')->distinct('url_id')->get();

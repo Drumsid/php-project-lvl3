@@ -29,7 +29,7 @@ class UrlControllerTest extends TestCase
             'updated_at' => Carbon::now()
         ]);
     }
-    public function testIndex()
+    public function testIndex(): void
     {
         $response = $this->get(route('urls.index'));
         $response->assertOk();
@@ -53,7 +53,7 @@ class UrlControllerTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseMissing('urls', $data);
     }
-    public function testChecks()
+    public function testChecks(): void
     {
         $data = ['id' => 1, 'name' => 'https://test.ru'];
         $url = $data['name'];
