@@ -64,7 +64,7 @@ class UrlControllerTest extends TestCase
             'h1'          => 'Header test fixtures',
             'description' => 'description test fixture',
         ];
-        $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
+        $html = file_get_contents(__DIR__ . '/../fixtures/test.html') ?? null;
         Http::fake([$url => Http::response($html)]);
         $response = $this->post(route('urls.checks', $data['id']));
         $response->assertSessionHasNoErrors();
