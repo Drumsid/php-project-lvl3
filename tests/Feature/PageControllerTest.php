@@ -13,7 +13,7 @@ class PageControllerTest extends TestCase
      *
      * @return void
      */
-    public function testMain()
+    public function testMain(): void
     {
         $response = $this->get(route('main'));
         $response->assertOk();
