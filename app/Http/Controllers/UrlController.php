@@ -31,19 +31,20 @@ class UrlController extends Controller
             'name' => 'required|unique:urls|regex:/^(https?):\/\/[^ -"\s].+$/m'
         ]);
         if ($validator->fails()) {
-            flash('пустой запрос')->error();
+            flash('Не корректный адрес сайта!')->error();
             return redirect()->route('main');
         }
 
         $urlData = parse_url($formData['name']);
-        $host = array_key_exists('host', $urlData) ? "{$urlData['scheme']}://{$urlData['host']}" : null;
-        if (! $host) {
-            flash('Введите корректный адрес сайта!')->error();
+        if (array_key_exists('host', $urlData)) {
+            $host = "{$urlData['scheme']}://{$urlData['host']}";
+        } else {
+            flash('Не корректный адрес сайта!')->error();
             return redirect()->route('main');
         }
 
         $duble = DB::table('urls')->where('name', $host)->first();
-        if ($duble) {
+        if (! is_null($duble)) {
             flash("Такой сайт \"{$duble->name}\" уже существует!")->warning();
             return redirect()->route('urls.show', $duble->id);
         } else {
