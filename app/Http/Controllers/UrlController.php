@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Http;
-use DiDom\Document;
 
 class UrlController extends Controller
 {
@@ -36,56 +34,28 @@ class UrlController extends Controller
         }
 
         $urlData = parse_url($formData['name']);
-        if (is_array($urlData) && array_key_exists('scheme', $urlData) && array_key_exists('host', $urlData)) {
-            $host = "{$urlData['scheme']}://{$urlData['host']}";
-        } else {
-            flash('Не корректный адрес сайта!')->error();
+        $validateUrlData = Validator::make($urlData, [
+            'scheme' => 'required',
+            'host' => 'required',
+        ]);
+        if ($validateUrlData->fails()) {
+            flash('Не корректный адрес сайта2!')->error();
             return redirect()->route('main');
+        } else {
+            $host = "{$urlData['scheme']}://{$urlData['host']}";
         }
 
-        $duble = DB::table('urls')->where('name', $host)->first();
-        if (! is_null($duble)) {
-            flash("Такой сайт \"{$duble->name}\" уже существует!")->warning();
-            return redirect()->route('urls.show', $duble->id);
+        $url = DB::table('urls')->where('name', $host)->first();
+        if (! is_null($url)) {
+            flash("Такой сайт \"{$url->name}\" уже существует!")->warning();
+            $id = $url->id;
         } else {
             $id = DB::table('urls')->insertGetId([
                 'name' => $host,
                 'created_at' => Carbon::now()
             ]);
             flash('Сайт успешно добавлен!')->success();
-            return redirect()->route('urls.show', $id);
         }
-    }
-    public function checks(int $id): object
-    {
-        $url = DB::table('urls')->find($id);
-        try {
-            $response = Http::get($url->name);
-        } catch (\Exception $e) {
-            flash("Error: {$e->getMessage()}")->error();
-            return back();
-        }
-        $document = new Document($response->body());
-        $h1 = optional($document->first('h1'))->text();
-        $keywords = optional($document->first('meta[name=keywords]'))->getAttribute('content');
-        $description = optional($document->first('meta[name=description]'))->getAttribute('content');
-        if ($response->ok()) {
-            DB::table('url_checks')->insert([
-                'url_id' => $id,
-                'status_code' => $response->status(),
-                'h1' => $h1,
-                'keywords' => $keywords,
-                'description' => $description,
-                'created_at' => $url->created_at,
-                'updated_at' => Carbon::now()
-            ]);
-            DB::table('urls')->where('id', $id)->update(
-                ['updated_at' => Carbon::now()]
-            );
-            flash('Сайт проанализирован!')->warning();
-            return redirect()->route('urls.show', $id);
-        }
-        flash('проверка не удалась!')->error();
-        return back();
+        return redirect()->route('urls.show', $id);
     }
 }

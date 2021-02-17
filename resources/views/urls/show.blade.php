@@ -28,7 +28,7 @@
             </table>
         </div>
         <h3>Проверки</h3>
-        {{Form::open(['url' => route('urls.checks', $url->id), 'method' => 'post'])}}
+        {{Form::open(['url' => route('urls.checks.store', $url->id), 'method' => 'post'])}}
             {{Form::submit('Запустить проверку', ['class' => 'btn btn-primary'])}}
         {{Form::close()}}
         <br>
