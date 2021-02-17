@@ -26,7 +26,7 @@ class UrlController extends Controller
     {
         $formData = $request->input('url');
         $validator = Validator::make($formData, [
-            'name' => 'required|unique:urls|regex:/^(https?):\/\/[^ -"\s].+$/m'
+            'name' => 'required|url|max:255'
         ]);
         if ($validator->fails()) {
             flash('Не корректный адрес сайта!')->error();
@@ -34,16 +34,7 @@ class UrlController extends Controller
         }
 
         $urlData = parse_url($formData['name']);
-        $validateUrlData = Validator::make($urlData, [
-            'scheme' => 'required',
-            'host' => 'required',
-        ]);
-        if ($validateUrlData->fails()) {
-            flash('Не корректный адрес сайта2!')->error();
-            return redirect()->route('main');
-        } else {
-            $host = "{$urlData['scheme']}://{$urlData['host']}";
-        }
+        $host = "{$urlData['scheme']}://{$urlData['host']}";
 
         $url = DB::table('urls')->where('name', $host)->first();
         if (! is_null($url)) {
