@@ -28,7 +28,10 @@ class UrlChecksControllerTest extends TestCase
             'h1'          => 'Header test fixtures',
             'description' => 'description test fixture',
         ];
-        $html = file_get_contents(__DIR__ . '/../fixtures/test.html') ?? null;
+        $html = file_get_contents(__DIR__ . '/../fixtures/test.html');
+        if ($html  === false) {
+            throw new \Exception('Something wrong with fixtures file');
+        }
         Http::fake([$url => Http::response($html)]);
         $response = $this->post(route('urls.checks.store', $data['id']));
         $response->assertSessionHasNoErrors();
