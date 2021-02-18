@@ -11,30 +11,18 @@ use Illuminate\Support\Facades\Http;
 
 class UrlChecksControllerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        DB::table('urls')->insert([
-            ['name' => "https://test.ru", 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'exampleSite2.ru', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-        ]);
-        DB::table('url_checks')->insert([
-            'url_id' => 1,
-            'status_code' => 200,
-            'h1' => 'header',
-            'keywords' => 'keywords',
-            'description' => 'description',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-    }
-
     public function testStore(): void
     {
-        $data = ['id' => 1, 'name' => 'https://test.ru'];
+        $data = [
+            'id' => 1,
+            'name' => 'https://test.ru',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ];
+        $id = DB::table('urls')->insertGetId($data);
         $url = $data['name'];
         $expected = [
-            'url_id'   => 1,
+            'url_id'   => $id,
             'status_code' => 200,
             'keywords'    => 'keywords test fixture',
             'h1'          => 'Header test fixtures',
