@@ -39,7 +39,7 @@ class UrlChecksController extends Controller
             }
         } catch (RequestException | ConnectionException $e) {
             flash("Error: {$e->getMessage()}")->error();
-            return back();
+            return redirect()->route('urls.show', $id);
         }
     }
 }
